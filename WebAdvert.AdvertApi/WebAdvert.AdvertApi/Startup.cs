@@ -1,9 +1,10 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AutoMapper;
+using WebAdvert.AdvertApi.HealthChecks;
 using WebAdvert.AdvertApi.Services;
 
 namespace WebAdvert.AdvertApi
@@ -26,6 +27,9 @@ namespace WebAdvert.AdvertApi
 
             services.AddTransient<IAdvertsService, AdvertsService>();
 
+            services.AddHealthChecks()
+                .AddCheck<StorageHealthCheck>("storage_health_check");
+
             services.AddControllers();
         }
 
@@ -41,6 +45,8 @@ namespace WebAdvert.AdvertApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseHealthChecks("/health");
 
             app.UseEndpoints(endpoints =>
             {

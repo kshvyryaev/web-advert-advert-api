@@ -5,8 +5,10 @@ namespace WebAdvert.AdvertApi.Services
 {
     public interface IAdvertsService
     {
-        Task<string> Create(AdvertModel model);
+        Task<string> CreateAsync(AdvertModel model);
 
-        Task Confirm(ConfirmAdvertModel model);
+        Task ConfirmAsync(ConfirmAdvertModel model);
+
+        Task<bool> CheckHealthAsync();
     }
 }

@@ -17,7 +17,7 @@ namespace WebAdvert.AdvertApi.Services
             _mapper = mapper;
         }
 
-        public async Task<string> Create(AdvertModel model)
+        public async Task<string> CreateAsync(AdvertModel model)
         {
             var dbModel = _mapper.Map<AdvertDbModel>(model);
             dbModel.Id = Guid.NewGuid().ToString();
@@ -31,7 +31,7 @@ namespace WebAdvert.AdvertApi.Services
             return dbModel.Id;
         }
 
-        public async Task Confirm(ConfirmAdvertModel model)
+        public async Task ConfirmAsync(ConfirmAdvertModel model)
         {
             using var client = new AmazonDynamoDBClient();
             using var context = new DynamoDBContext(client);
@@ -51,6 +51,13 @@ namespace WebAdvert.AdvertApi.Services
             {
                 await context.DeleteAsync(record);
             }
+        }
+
+        public async Task<bool> CheckHealthAsync()
+        {
+            using var client = new AmazonDynamoDBClient();
+            var tableData = await client.DescribeTableAsync("Adverts");
+            return string.Compare(tableData.Table.TableStatus, "active", StringComparison.OrdinalIgnoreCase) == 0;
         }
     }
 }

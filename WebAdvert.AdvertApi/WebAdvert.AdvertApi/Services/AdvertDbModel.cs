@@ -20,6 +20,12 @@ namespace WebAdvert.AdvertApi.Services
         public double Price { get; set; }
 
         [DynamoDBProperty]
+        public string UserName { get; set; }
+
+        [DynamoDBProperty]
+        public string FilePath { get; set; }
+
+        [DynamoDBProperty]
         public DateTime CreationDateTime { get; set; }
 
         [DynamoDBProperty]

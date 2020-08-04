@@ -26,7 +26,7 @@ namespace WebAdvert.AdvertApi.Controllers
         {
             try
             {
-                var recordId = await _advertsService.Create(model);
+                var recordId = await _advertsService.CreateAsync(model);
                 var response = new CreateAdvertResponse { Id = recordId };
                 return Ok(response);
             }
@@ -45,7 +45,7 @@ namespace WebAdvert.AdvertApi.Controllers
         {
             try
             {
-                await _advertsService.Confirm(model);
+                await _advertsService.ConfirmAsync(model);
                 return Ok();
             }
             catch (KeyNotFoundException)

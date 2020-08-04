@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>kshv.inc</Authors>
+    <Product>Web Advert Microservices</Product>
+    <PackageProjectUrl>https://github.com/kshvyryaev/WebAdvert.AdvertApi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kshvyryaev/WebAdvert.AdvertApi</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>Kshv.WebAdvert.Models</PackageId>
   </PropertyGroup>
 
 </Project>
