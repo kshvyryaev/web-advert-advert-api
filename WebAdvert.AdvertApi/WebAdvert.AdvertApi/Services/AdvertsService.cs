@@ -5,6 +5,7 @@ using AutoMapper;
 using Amazon.DynamoDBv2;
 using WebAdvert.Models;
 using Amazon.DynamoDBv2.DataModel;
+using System.Linq;
 
 namespace WebAdvert.AdvertApi.Services
 {
@@ -51,6 +52,35 @@ namespace WebAdvert.AdvertApi.Services
             {
                 await context.DeleteAsync(record);
             }
+        }
+
+        public async Task<List<AdvertModel>> GetAllAsync()
+        {
+            using var client = new AmazonDynamoDBClient();
+            using var context = new DynamoDBContext(client);
+
+            var scanResult = await context
+                .ScanAsync<AdvertDbModel>(new List<ScanCondition>())
+                .GetNextSetAsync();
+
+            return scanResult
+                .Select(item => _mapper.Map<AdvertModel>(item))
+                .ToList();
+        }
+
+        public async Task<AdvertModel> GetByIdAsync(string id)
+        {
+            var client = new AmazonDynamoDBClient();
+            using var context = new DynamoDBContext(client);
+
+            var dbModel = await context.LoadAsync<AdvertDbModel>(id);
+
+            if (dbModel == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            return _mapper.Map<AdvertModel>(dbModel);
         }
 
         public async Task<bool> CheckHealthAsync()

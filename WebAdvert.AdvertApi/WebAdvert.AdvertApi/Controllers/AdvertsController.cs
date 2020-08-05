@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Amazon.SimpleNotificationService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using WebAdvert.AdvertApi.Services;
 using WebAdvert.Models;
+using WebAdvert.Models.Messages;
 
 namespace WebAdvert.AdvertApi.Controllers
 {
@@ -12,10 +16,12 @@ namespace WebAdvert.AdvertApi.Controllers
     public class AdvertsController : ControllerBase
     {
         private readonly IAdvertsService _advertsService;
+        private readonly IConfiguration _configuration;
 
-        public AdvertsController(IAdvertsService advertsService)
+        public AdvertsController(IAdvertsService advertsService, IConfiguration configuration)
         {
             _advertsService = advertsService;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -46,6 +52,7 @@ namespace WebAdvert.AdvertApi.Controllers
             try
             {
                 await _advertsService.ConfirmAsync(model);
+                await RaiseAdvertConfirmedMessage(model);
                 return Ok();
             }
             catch (KeyNotFoundException)
@@ -57,6 +64,23 @@ namespace WebAdvert.AdvertApi.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        private async Task RaiseAdvertConfirmedMessage(ConfirmAdvertModel model)
+        {
+            var topicArn = _configuration.GetValue<string>("TopicArn");
+            var dbModel = await _advertsService.GetByIdAsync(model.Id);
+
+            using var client = new AmazonSimpleNotificationServiceClient();
+
+            var message = new AdvertConfirmedMessage
+            {
+                Id = model.Id,
+                Title = dbModel.Title
+            };
+
+            var messageJson = JsonConvert.SerializeObject(message);
+            await client.PublishAsync(topicArn, messageJson);
         }
     }
 }
