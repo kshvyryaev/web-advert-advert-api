@@ -36,7 +36,7 @@ namespace WebAdvert.AdvertApi.Services
             using var client = new AmazonDynamoDBClient();
             using var context = new DynamoDBContext(client);
 
-            var record = await context.LoadAsync(model.Id);
+            var record = await context.LoadAsync<AdvertDbModel>(model.Id);
             if (record == null)
             {
                 throw new KeyNotFoundException($"A record with id={model.Id} was not found.");
