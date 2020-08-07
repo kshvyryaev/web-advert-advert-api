@@ -91,7 +91,6 @@ namespace WebAdvert.AdvertApi.Controllers
         [HttpGet]
         [Route("all")]
         [ProducesResponseType(200)]
-        [EnableCors("AllOrigin")]
         public async Task<IActionResult> GetAll()
         {
             var adverts = await _advertsService.GetAllAsync();
