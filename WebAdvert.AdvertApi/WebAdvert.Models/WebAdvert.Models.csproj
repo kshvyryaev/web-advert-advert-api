@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/kshvyryaev/WebAdvert.AdvertApi</RepositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>Kshv.WebAdvert.Models</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
 </Project>
