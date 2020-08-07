@@ -61,7 +61,7 @@ namespace WebAdvert.AdvertApi.Services
 
             var scanResult = await context
                 .ScanAsync<AdvertDbModel>(new List<ScanCondition>())
-                .GetNextSetAsync();
+                .GetRemainingAsync();
 
             return scanResult
                 .Select(item => _mapper.Map<AdvertModel>(item))
