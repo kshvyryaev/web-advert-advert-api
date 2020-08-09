@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using WebAdvert.AdvertApi.HealthChecks;
 using WebAdvert.AdvertApi.Services;
+using Microsoft.OpenApi.Models;
 
 namespace WebAdvert.AdvertApi
 {
@@ -30,6 +31,19 @@ namespace WebAdvert.AdvertApi
             services.AddHealthChecks()
                 .AddCheck<StorageHealthCheck>("storage_health_check");
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Web Advert Api",
+                    Version = "v1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Konstantin Shvyryaev"
+                    }
+                });
+            });
+
             services.AddControllers();
         }
 
@@ -47,6 +61,13 @@ namespace WebAdvert.AdvertApi
             app.UseAuthorization();
 
             app.UseHealthChecks("/health");
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Advert Api V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
